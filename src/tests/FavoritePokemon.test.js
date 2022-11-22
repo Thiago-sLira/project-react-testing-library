@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, act } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FavoritePokemon } from '../pages';
 import renderWithRouter from '../renderWithRouter';
@@ -26,9 +26,19 @@ describe('Testando o componente <FavoritePokemon.js', () => {
     expect(pokemonFavoriteCheck).toBeInTheDocument();
 
     userEvent.click(pokemonFavoriteCheck);
-
     const imageFavorite = screen.getByRole('img', { name: /pikachu is marked as favorite/i });
     expect(imageFavorite).toBeInTheDocument();
+
+    const homeLink = screen.getByRole('link', { name: /home/i });
+    userEvent.click(homeLink);
+    expect(history.location.pathname).toBe('/');
+
+    const nextPokemonButton = screen.getByRole('button', { name: /próximo pokémon/i });
+    userEvent.click(nextPokemonButton);
+    userEvent.click(screen.getByRole('link', { name: /more details/i }));
+    expect(history.location.pathname).toBe('/pokemon/4');
+
+    userEvent.click(screen.getByRole('checkbox', { name: /pokémon favoritado\?/i }));
 
     const favoritePokemonLink = screen.getByRole('link', { name: /favorite pokémon/i });
     userEvent.click(favoritePokemonLink);
@@ -36,6 +46,8 @@ describe('Testando o componente <FavoritePokemon.js', () => {
 
     const pikachuFavorite = screen.getByText(/pikachu/i);
     expect(pikachuFavorite).toBeInTheDocument();
+    const charmanderFavorite = screen.getByText(/charmander/i);
+    expect(charmanderFavorite).toBeInTheDocument();
   });
 });
 
